@@ -1,0 +1,26 @@
+name: CI
+  on:
+    push:
+      branches:
+        - main
+    pull_request:
+      branches:
+        - main
+
+jobs:
+  ci:
+    runs-om: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t textutils-tester .
+
+      - name: Lint
+        run: docker run --rm textutils-tester flake8 src tests
+
+      - name: Tests
+        run: docker run --rm textutils-tester
+
